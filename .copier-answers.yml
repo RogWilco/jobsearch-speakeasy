@@ -1,0 +1,13 @@
+_src_path: /Users/nwilliams/Projects/ProjectTemplates/typescript-nodejs
+package_author: Nick Williams <git@nickawilliams.com>
+package_license: BSD-2-Clause
+package_manager: yarn
+package_name: pokedex-client
+package_private: false
+package_version: 0.0.0
+package_versions: defined
+project_name: Pokédex Link
+project_tooling:
+  - eslint
+  - prettier
+  - jest
