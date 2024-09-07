@@ -1,3 +1,1 @@
-import { Client } from 'pokedex-link'
-
-const pokedex = new Client({})
+export * from './pokedex-client'
