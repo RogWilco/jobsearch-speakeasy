@@ -1,5 +1,6 @@
 module.exports = {
   plugins: [
+    'prettier-plugin-multiline-arrays',
     "prettier-plugin-organize-imports",
     "prettier-plugin-packagejson",
     "prettier-plugin-sh",
