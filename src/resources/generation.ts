@@ -3,7 +3,7 @@ import { GetMany, GetOne } from '../lib/resource-transformer'
 
 export class Generation extends NamedResource {
   @GetOne()
-  @GetMany((r) => r.url.split('/').pop())
+  @GetMany((r) => Number.parseInt(r.url.match(/\/(\d+)\//)[1]))
   public id?: number
 
   @GetOne()
