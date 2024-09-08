@@ -3,7 +3,6 @@
 /**
  * A debugging type to help understand complex types.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type _Resolve<T> = {} & { [P in keyof T]: T[P] }
 
 /**
@@ -11,7 +10,6 @@ export type _Resolve<T> = {} & { [P in keyof T]: T[P] }
  *
  * CAUTION: This type is recursive and vulnerable to infinite loops.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type _ResolveDeep<T> = T extends object
   ? {} & { [P in keyof T]: _ResolveDeep<T[P]> }
   : T

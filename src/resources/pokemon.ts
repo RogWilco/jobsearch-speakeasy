@@ -27,6 +27,7 @@ export class Pokemon extends NamedResource {
   @GetOne(r => r.species.name)
   public species?: string
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @GetOne(r => r.moves.map((m: any) => m.move.name))
   public moves?: string[]
 }
