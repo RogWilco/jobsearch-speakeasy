@@ -25,6 +25,6 @@ export class Pokemon extends NamedResource {
   @GetOne(r => r.species.name)
   public species?: string
 
-  @GetOne(r => r.moves.map(m => m.move.name))
+  @GetOne(r => r.moves.map((m: any) => m.move.name))
   public moves?: string[]
 }

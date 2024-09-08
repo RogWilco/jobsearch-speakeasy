@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { Resource, ResourceType } from './resource'
 
-export type TransformCallback<T extends any> = (r: T) => T[keyof T]
+export type TransformCallback<From, To> = (r: From) => To[keyof To]
 
 /**
  * A resource transformer that transforms raw API data from a particular context
@@ -76,10 +76,10 @@ export class ResourceTransformer<From> {
  *
  * @returns the property decorator
  */
-export function GetOne<R = any>(
-  transformCb?: TransformCallback<R>,
+export function GetOne<From = any, To = any>(
+  transformCb?: TransformCallback<From, To>,
 ): PropertyDecorator {
-  return _decorate<R>('getOne', transformCb)
+  return _decorate('getOne', transformCb)
 }
 
 /**
@@ -90,10 +90,10 @@ export function GetOne<R = any>(
  *
  * @returns the property decorator
  */
-export function GetMany<R = any>(
-  transformCb?: TransformCallback<R>,
+export function GetMany<From = any, To = any>(
+  transformCb?: TransformCallback<From, To>,
 ): PropertyDecorator {
-  return _decorate<R>('getMany', transformCb)
+  return _decorate('getMany', transformCb)
 }
 
 /**
@@ -105,16 +105,16 @@ export function GetMany<R = any>(
  *
  * @returns a property decorator
  */
-function _decorate<R = any>(
+function _decorate<From, To>(
   context: string,
-  transformCb?: TransformCallback<R>,
+  transformCb?: TransformCallback<From, To>,
 ): PropertyDecorator {
   return (target, propertyKey) => {
     Reflect.defineMetadata(
       `transform:${context}`,
       {
         ...Reflect.getMetadata(`transform:${context}`, target.constructor),
-        [propertyKey]: transformCb ?? ((r: R) => r[propertyKey as keyof R]),
+        [propertyKey]: transformCb ?? (r => r[propertyKey as keyof typeof r]),
       },
       target.constructor,
     )
