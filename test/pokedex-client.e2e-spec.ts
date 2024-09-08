@@ -77,16 +77,16 @@ describe('Pokedex Client', () => {
 
         expect(result).toBeDefined()
         expect(result.length).toBe(10)
-        expect(result[0].name).toBe('mew')
-        expect(result[1].name).toBe('chikorita')
-        expect(result[2].name).toBe('bayleef')
-        expect(result[3].name).toBe('meganium')
-        expect(result[4].name).toBe('cyndaquil')
-        expect(result[5].name).toBe('quilava')
-        expect(result[6].name).toBe('typhlosion')
-        expect(result[7].name).toBe('totodile')
-        expect(result[8].name).toBe('croconaw')
-        expect(result[9].name).toBe('feraligatr')
+        expect(result[0].name).toBe('miraidon-low-power-mode')
+        expect(result[1].name).toBe('miraidon-drive-mode')
+        expect(result[2].name).toBe('miraidon-aquatic-mode')
+        expect(result[3].name).toBe('miraidon-glide-mode')
+        expect(result[4].name).toBe('ursaluna-bloodmoon')
+        expect(result[5].name).toBe('ogerpon-wellspring-mask')
+        expect(result[6].name).toBe('ogerpon-hearthflame-mask')
+        expect(result[7].name).toBe('ogerpon-cornerstone-mask')
+        expect(result[8].name).toBe('terapagos-terastal')
+        expect(result[9].name).toBe('terapagos-stellar')
       })
     })
 
@@ -172,6 +172,15 @@ describe('Pokedex Client', () => {
         expect(result).toBeDefined()
         expect(result.length).toBeGreaterThan(0)
         expect(result.length).toBe(count)
+      })
+    })
+
+    describe('count', () => {
+      it('successfully fetches the total number of generations', async () => {
+        const result = await client.generation.count()
+
+        expect(result).toBeDefined()
+        expect(result).toBeGreaterThan(0)
       })
     })
   })
