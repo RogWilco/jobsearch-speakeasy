@@ -1,7 +1,7 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, CreateAxiosDefaults } from 'axios'
 import { Constructor } from './interfaces/utility-types'
 import { NamedResource } from './named-resource'
-import { ResourceType } from './resource'
+import { BaseResourceType } from './resource'
 import { ResourceTransformer } from './resource-transformer'
 
 export const DEFAULT_LIMIT = 20
@@ -70,30 +70,27 @@ export interface ResourceClient<T extends NamedResource> {
  * @returns the ResourceClient for the given Resource
  */
 export function ResourceClient<T extends NamedResource>(
-  ResourceType: ResourceType<T>,
+  ResourceType: BaseResourceType<T>,
 ): Constructor<ResourceClient<T>> {
   class ResourceClientMixin implements ResourceClient<T> {
     private _http: AxiosInstance
-    private _config = {
-      // TODO: this should be configurable
-      baseURL: 'https://pokeapi.co/api/v2/pokemon',
-    }
+    private _path: string
 
     /**
      * Initializes a new resource client with the specified configuration.
      *
      * @param config the configuration for the resource client
      */
-    constructor(config?: {}) {
+    constructor(config?: CreateAxiosDefaults) {
+      this._path = Reflect.getMetadata('resource:path', ResourceType)
+
       this._http = axios.create(config)
     }
 
     async getOne(idOrName: string | number): Promise<T> {
       try {
         // Fetch the resource data from the API
-        const response = await this._http.get(
-          `${this._config.baseURL}/${idOrName}`,
-        )
+        const response = await this._http.get(`${this._path}/${idOrName}`)
 
         // Transform the response data to match the Resource class
         return ResourceTransformer.transform(response.data)
@@ -108,7 +105,7 @@ export function ResourceClient<T extends NamedResource>(
     async getMany(limit = DEFAULT_LIMIT, offset = 0): Promise<T[]> {
       try {
         // Fetch the resource data from the API
-        const response = await this._http.get(this._config.baseURL, {
+        const response = await this._http.get(this._path, {
           params: {
             limit,
             offset,
@@ -142,7 +139,7 @@ export function ResourceClient<T extends NamedResource>(
 
     async count(): Promise<number> {
       try {
-        const response = await this._http.get(this._config.baseURL, {
+        const response = await this._http.get(this._path, {
           params: {
             limit: -1,
             offset: -1,

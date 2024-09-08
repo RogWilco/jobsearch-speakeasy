@@ -1,6 +1,8 @@
 import { NamedResource } from '../lib/named-resource'
+import { Resource } from '../lib/resource'
 import { GetMany, GetOne } from '../lib/resource-transformer'
 
+@Resource('/pokemon')
 export class Pokemon extends NamedResource {
   @GetOne()
   @GetMany(r => Number.parseInt(r.url.match(/\/(\d+)\//)[1]))

@@ -1,6 +1,6 @@
-import { Resource } from './resource'
+import { BaseResource } from './resource'
 
-export abstract class NamedResource extends Resource {
+export abstract class NamedResource extends BaseResource {
   public id?: number
   public name?: string
 }

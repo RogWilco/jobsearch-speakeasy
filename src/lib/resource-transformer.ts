@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Resource, ResourceType } from './resource'
+import { BaseResource, BaseResourceType } from './resource'
 
 export type TransformCallback<From, To> = (r: From) => To[keyof To]
 
@@ -50,7 +50,7 @@ export class ResourceTransformer<From> {
    *
    * @returns the transformed data
    */
-  public to<To extends Resource>(ResourceType: ResourceType<To>): To {
+  public to<To extends BaseResource>(ResourceType: BaseResourceType<To>): To {
     const transformations = Reflect.getMetadata(
       `transform:${this._context}`,
       ResourceType,
