@@ -30,3 +30,10 @@ export type Nil = undefined | null
  * A constructor of T.
  */
 export type Constructor<T, U extends any[] = any[]> = new (...args: U) => T
+
+/**
+ * Construct a type containing all properties from T.
+ */
+export type Properties<T> = {
+  [K in keyof T]: T[K]
+}
