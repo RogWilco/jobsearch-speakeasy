@@ -111,7 +111,7 @@ function _decorate<R = any>(
 ): PropertyDecorator {
   return (target, propertyKey) => {
     Reflect.defineMetadata(
-      'transform:getOne',
+      `transform:${context}`,
       {
         ...Reflect.getMetadata(`transform:${context}`, target.constructor),
         [propertyKey]: transformCb ?? ((r: R) => r[propertyKey as keyof R]),
