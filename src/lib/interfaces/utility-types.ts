@@ -27,6 +27,11 @@ export type Primitive = string | number | boolean | bigint | symbol
 export type Nil = undefined | null
 
 /**
+ * Any function that returns T.
+ */
+export type Func<T = any, U extends any[] = any[]> = (...args: U) => T
+
+/**
  * A constructor of T.
  */
 export type Constructor<T, U extends any[] = any[]> = new (...args: U) => T
