@@ -2,7 +2,7 @@ import axios, { AxiosInstance, CreateAxiosDefaults } from 'axios'
 import { Constructor } from './interfaces/utility-types'
 import { NamedResource } from './named-resource'
 import { BaseResourceType } from './resource'
-import { ResourceTransformer } from './resource-transformer'
+import { ResourceTransformer, Transformable } from './resource-transformer'
 
 export const DEFAULT_LIMIT = 20
 
@@ -113,7 +113,7 @@ export function ResourceClient<T extends NamedResource>(
         })
 
         // Transform the response data to match the Resource class
-        return response.data.results.map((result: any) =>
+        return response.data.results.map((result: Transformable) =>
           ResourceTransformer.transform(result)
             .from('getMany')
             .to(ResourceType),

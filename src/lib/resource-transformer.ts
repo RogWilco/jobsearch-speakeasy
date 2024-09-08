@@ -1,13 +1,20 @@
 import 'reflect-metadata'
 import { BaseResource, BaseResourceType } from './resource'
 
-export type TransformCallback<From, To> = (r: From) => To[keyof To]
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Transformable = Record<string, any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Transformed = BaseResource & Record<string, any>
+export type TransformCallback<
+  From extends Transformable,
+  To extends Transformed,
+> = (r: From) => To[keyof To]
 
 /**
  * A resource transformer that transforms raw API data from a particular context
  * into a valid Resource object to be returned by the SDK.
  */
-export class ResourceTransformer<From> {
+export class ResourceTransformer<From extends Transformable> {
   /**
    * Initializes a new resource transformer with the specified data.
    *
@@ -15,7 +22,9 @@ export class ResourceTransformer<From> {
    *
    * @returns a new resource transformer
    */
-  public static transform<From>(data: From) {
+  public static transform<From extends Transformable>(
+    data: From,
+  ): ResourceTransformer<From> {
     return new ResourceTransformer<From>(data)
   }
 
@@ -50,7 +59,7 @@ export class ResourceTransformer<From> {
    *
    * @returns the transformed data
    */
-  public to<To extends BaseResource>(ResourceType: BaseResourceType<To>): To {
+  public to<To extends Transformed>(ResourceType: BaseResourceType<To>): To {
     const transformations = Reflect.getMetadata(
       `transform:${this._context}`,
       ResourceType,
@@ -76,7 +85,7 @@ export class ResourceTransformer<From> {
  *
  * @returns the property decorator
  */
-export function GetOne<From = any, To = any>(
+export function GetOne<From extends Transformable, To extends Transformed>(
   transformCb?: TransformCallback<From, To>,
 ): PropertyDecorator {
   return _decorate('getOne', transformCb)
@@ -90,7 +99,7 @@ export function GetOne<From = any, To = any>(
  *
  * @returns the property decorator
  */
-export function GetMany<From = any, To = any>(
+export function GetMany<From extends Transformable, To extends Transformed>(
   transformCb?: TransformCallback<From, To>,
 ): PropertyDecorator {
   return _decorate('getMany', transformCb)
@@ -105,7 +114,10 @@ export function GetMany<From = any, To = any>(
  *
  * @returns a property decorator
  */
-function _decorate<From, To>(
+function _decorate<
+  From extends Transformable = Transformable,
+  To extends Transformed = Transformed,
+>(
   context: string,
   transformCb?: TransformCallback<From, To>,
 ): PropertyDecorator {
