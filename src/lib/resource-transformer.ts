@@ -55,7 +55,7 @@ export class ResourceTransformer<From extends Transformable> {
    * Transforms the data from the current context to the specified resource
    * type.
    *
-   * @param context the context to which the data will be transformed
+   * @param ResourceType target the resource class
    *
    * @returns the transformed data
    */

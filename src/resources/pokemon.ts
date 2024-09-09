@@ -2,6 +2,9 @@ import { NamedResource } from '../lib/named-resource'
 import { Resource } from '../lib/resource'
 import { GetMany, GetOne } from '../lib/resource-transformer'
 
+/**
+ * Represents a Pokemon resource.
+ */
 @Resource('/pokemon')
 export class Pokemon extends NamedResource {
   @GetOne()
