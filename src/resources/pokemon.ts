@@ -1,14 +1,20 @@
 import { NamedResource } from '../lib/named-resource'
 import { Resource } from '../lib/resource'
-import { GetMany, GetOne } from '../lib/resource-transformer'
+import {
+  GetMany,
+  GetOne,
+  Transformable,
+  Transformed,
+} from '../lib/resource-transformer'
+import { Nested } from '../lib/response'
 
 /**
  * Represents a Pokemon resource.
  */
 @Resource('/pokemon')
-export class Pokemon extends NamedResource {
+export class Pokemon extends NamedResource implements Transformed {
   @GetOne()
-  @GetMany(r => Number.parseInt(r.url.match(/\/(\d+)\//)[1]))
+  @GetMany<PokemonGetMany>(r => Number.parseInt(r.url.match(/\/(\d+)\//)![1]))
   public id?: number
 
   @GetOne()
@@ -27,10 +33,35 @@ export class Pokemon extends NamedResource {
   @GetOne()
   public order?: number
 
-  @GetOne(r => r.species.name)
+  @GetOne<PokemonGetOne>(r => r.species.name)
   public species?: string
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @GetOne(r => r.moves.map((m: any) => m.move.name))
+  @GetOne<PokemonGetOne>(r => r.moves.map(m => m.name))
   public moves?: string[]
 }
+
+/**
+ * API schema when fetching one Pokemon.
+ */
+export interface PokemonGetOne extends Transformable {
+  id: number
+  name: string
+  height: number
+  weight: number
+  base_experience: number
+  order: number
+  species: Nested
+  abilities: Nested[]
+  moves: Nested[]
+  types: Nested[]
+  stats: {
+    base_stat: number
+    effort: number
+    stat: string
+  }[]
+}
+
+/**
+ * API schema when fetching many Pokemon.
+ */
+export interface PokemonGetMany extends Transformable, Nested {}

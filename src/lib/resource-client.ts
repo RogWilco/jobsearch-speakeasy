@@ -3,6 +3,7 @@ import { NetworkError, RequestError, ServerError } from './errors'
 import { NamedResource } from './named-resource'
 import { BaseResourceType } from './resource'
 import { ResourceTransformer, Transformable } from './resource-transformer'
+import { Paginated } from './response'
 import { Constructor } from './utility-types'
 
 export const DEFAULT_LIMIT = 20
@@ -152,12 +153,15 @@ export function ResourceClient<T extends NamedResource>(
         offset = await this._convertNegativeOffset(offset)
 
         // Fetch the resource data from the API
-        const response = await this._http.get(this._path, {
-          params: {
-            limit,
-            offset,
+        const response = await this._http.get<Paginated<Transformable>>(
+          this._path,
+          {
+            params: {
+              limit,
+              offset,
+            },
           },
-        })
+        )
 
         // Transform the response data to match the Resource class
         return response.data.results.map((result: Transformable) =>

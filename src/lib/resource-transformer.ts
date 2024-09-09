@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import { BaseResource, BaseResourceType } from './resource'
+import { Nested } from './response'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Transformable = Record<string, any>
@@ -85,9 +86,10 @@ export class ResourceTransformer<From extends Transformable> {
  *
  * @returns the property decorator
  */
-export function GetOne<From extends Transformable, To extends Transformed>(
-  transformCb?: TransformCallback<From, To>,
-): PropertyDecorator {
+export function GetOne<
+  From extends Transformable,
+  To extends Transformed = Transformed,
+>(transformCb?: TransformCallback<From, To>): PropertyDecorator {
   return _decorate('getOne', transformCb)
 }
 
@@ -99,9 +101,10 @@ export function GetOne<From extends Transformable, To extends Transformed>(
  *
  * @returns the property decorator
  */
-export function GetMany<From extends Transformable, To extends Transformed>(
-  transformCb?: TransformCallback<From, To>,
-): PropertyDecorator {
+export function GetMany<
+  From extends Transformable = Nested,
+  To extends Transformed = Transformed,
+>(transformCb?: TransformCallback<From, To>): PropertyDecorator {
   return _decorate('getMany', transformCb)
 }
 
