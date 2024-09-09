@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, CreateAxiosDefaults } from 'axios'
+import axios, { AxiosInstance, CreateAxiosDefaults, isAxiosError } from 'axios'
+import { NetworkError, RequestError, ServerError } from './errors'
 import { Constructor } from './interfaces/utility-types'
 import { NamedResource } from './named-resource'
 import { BaseResourceType } from './resource'
@@ -80,11 +81,44 @@ export function ResourceClient<T extends NamedResource>(
      *
      * @returns the positive offset value
      */
-    protected async _handleNegativeOffset(offset: number): Promise<number> {
+    protected async _convertNegativeOffset(offset: number): Promise<number> {
       if (offset >= 0) return offset
 
       const count = await this.count()
       return Math.max(count + offset, 0)
+    }
+
+    /**
+     * Handles errors thrown during API requests, converting them to more
+     * specific error types.
+     *
+     * @param e the error to handle
+     *
+     * @throws {NetworkError} if the request fails due to a network error
+     * @throws {RequestError} if the request fails due to a client error
+     * @throws {ServerError} if the request fails due to a server error
+     * @throws {Error} if the request fails for an unknown reason
+     */
+    protected _handleError(e: unknown): never {
+      if (isAxiosError(e)) {
+        if (!e.response) {
+          throw new NetworkError('No response received from the server', e)
+        }
+
+        if (e.code === 'ECONNABORTED') {
+          throw new NetworkError('Request timed out', e)
+        }
+
+        if (e.response.status >= 500) {
+          throw new ServerError('Internal server error', e)
+        }
+
+        if (e.response.status >= 400) {
+          throw new RequestError('Resource not found', e)
+        }
+      }
+
+      throw e
     }
 
     /**
@@ -107,16 +141,15 @@ export function ResourceClient<T extends NamedResource>(
         return ResourceTransformer.transform(response.data)
           .from('getOne')
           .to(ResourceType)
-      } catch (error) {
-        // TODO: implement real error handling
-        throw new Error('Error fetching resource')
+      } catch (e) {
+        this._handleError(e)
       }
     }
 
     async getMany(limit = DEFAULT_LIMIT, offset = 0): Promise<T[]> {
       try {
         // Handle negative offset
-        offset = await this._handleNegativeOffset(offset)
+        offset = await this._convertNegativeOffset(offset)
 
         // Fetch the resource data from the API
         const response = await this._http.get(this._path, {
@@ -132,9 +165,8 @@ export function ResourceClient<T extends NamedResource>(
             .from('getMany')
             .to(ResourceType),
         )
-      } catch (error) {
-        // TODO: implement real error handling
-        throw new Error('Error fetching resources')
+      } catch (e) {
+        this._handleError(e)
       }
     }
 
@@ -161,9 +193,8 @@ export function ResourceClient<T extends NamedResource>(
         })
 
         return response.data.count
-      } catch (error) {
-        // TODO: implement real error handling
-        throw new Error('Error fetching resource count')
+      } catch (e) {
+        this._handleError(e)
       }
     }
   }
