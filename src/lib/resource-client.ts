@@ -31,10 +31,6 @@ export interface ResourceClient<T extends NamedResource> {
 
   /**
    * Retrieves a paginated collection of resources.
-   */
-
-  /**
-   * Retrieves a paginated collection of resources.
    *
    * @param limit the maximum number of resources to retrieve
    * @param offset the index at which to start retrieving resources
@@ -77,6 +73,21 @@ export function ResourceClient<T extends NamedResource>(
     private _path: string
 
     /**
+     * Handles negative offset values by converting them to a positive offset
+     * relative to the total number of resources available.
+     *
+     * @param offset the offset value to handle
+     *
+     * @returns the positive offset value
+     */
+    protected async _handleNegativeOffset(offset: number): Promise<number> {
+      if (offset >= 0) return offset
+
+      const count = await this.count()
+      return Math.max(count + offset, 0)
+    }
+
+    /**
      * Initializes a new resource client with the specified configuration.
      *
      * @param config the configuration for the resource client
@@ -104,6 +115,9 @@ export function ResourceClient<T extends NamedResource>(
 
     async getMany(limit = DEFAULT_LIMIT, offset = 0): Promise<T[]> {
       try {
+        // Handle negative offset
+        offset = await this._handleNegativeOffset(offset)
+
         // Fetch the resource data from the API
         const response = await this._http.get(this._path, {
           params: {
