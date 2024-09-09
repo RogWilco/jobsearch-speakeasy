@@ -1,10 +1,21 @@
+import axios from 'axios'
+import nock from 'nock'
 import { PokedexClient } from '../src'
+import { RequestError, ServerError } from '../src/lib/errors'
+
+axios.defaults.adapter = 'http'
 
 describe('Pokedex Client', () => {
+  let mockApi: nock.Scope
   let client: PokedexClient
 
   beforeEach(() => {
+    mockApi = nock('https://pokeapi.co/api/v2')
     client = new PokedexClient()
+  })
+
+  afterEach(() => {
+    nock.cleanAll()
   })
 
   describe('Pokemon', () => {
@@ -24,6 +35,16 @@ describe('Pokedex Client', () => {
 
         expect(result).toBeDefined()
         expect(result.id).toBe(1)
+      })
+
+      it('fails to fetch a single pokemon by invalid ID', async () => {
+        await expect(client.pokemon.getOne(0)).rejects.toThrow(RequestError)
+      })
+
+      it('fails to fetch a single pokemon by invalid name', async () => {
+        await expect(client.pokemon.getOne('invalid')).rejects.toThrow(
+          RequestError,
+        )
       })
     })
 
@@ -183,5 +204,46 @@ describe('Pokedex Client', () => {
         expect(result).toBeGreaterThan(0)
       })
     })
+  })
+
+  describe('Errors', () => {
+    it('throws a RequestError when the API responds with a HTTP-400 status', async () => {
+      // Mock API Response
+      mockApi.get(/\/pokemon\/.+/).reply(400)
+
+      await expect(client.pokemon.getOne('bulbasaur')).rejects.toThrow(
+        RequestError,
+      )
+    })
+
+    it('throws a RequestError when the API responds with a HTTP-404 status', async () => {
+      // Mock API Response
+      mockApi.get(/\/generation\/.+/).reply(404)
+
+      await expect(client.generation.getOne(3)).rejects.toThrow(RequestError)
+    })
+
+    it('throws a ServerError when the API responds with a HTTP-500 status', async () => {
+      // Mock API Response
+      mockApi.get(/\/pokemon\/.+/).reply(500)
+
+      await expect(client.pokemon.getOne('bulbasaur')).rejects.toThrow(
+        ServerError,
+      )
+    })
+
+    // it("throws a NetworkError when the API doesn't respond", async () => {
+    //   jest.mock('axios', () => ({
+    //     create: jest.fn().mockImplementation(() => ({
+    //       get: jest.fn().mockRejectedValue(new Error('Request timed out')),
+    //     })),
+    //   }))
+
+    //   await expect(client.pokemon.getOne('bulbasaur')).rejects.toThrow(
+    //     NetworkError,
+    //   )
+
+    //   jest.clearAllMocks()
+    // })
   })
 })
