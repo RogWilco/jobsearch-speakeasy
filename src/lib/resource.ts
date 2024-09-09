@@ -1,4 +1,4 @@
-import { Constructor, Properties } from './interfaces/utility-types'
+import { Constructor, Properties } from './utility-types'
 
 /**
  * Represents a resource that can be retrieved from an API.

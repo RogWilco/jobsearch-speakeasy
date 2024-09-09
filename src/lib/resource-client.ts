@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, CreateAxiosDefaults, isAxiosError } from 'axios'
 import { NetworkError, RequestError, ServerError } from './errors'
-import { Constructor } from './interfaces/utility-types'
 import { NamedResource } from './named-resource'
 import { BaseResourceType } from './resource'
 import { ResourceTransformer, Transformable } from './resource-transformer'
+import { Constructor } from './utility-types'
 
 export const DEFAULT_LIMIT = 20
 
