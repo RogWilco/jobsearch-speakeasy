@@ -3,6 +3,8 @@
 [![github-verify-image]][github-verify-url]
 [![Code Coverage][coverage-image]][coverage-url]
 
+A TypeScript SDK for interacting with the [PokéAPI](https://pokeapi.co).
+
 - [Installation](#installation)
 - [Usage](#usage)
   - [Initializing the Client](#initializing-the-client)
