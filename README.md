@@ -15,6 +15,12 @@
   - [Linting and Formatting](#linting-and-formatting)
   - [Generating Documentation](#generating-documentation)
 - [Design Notes](#design-notes)
+  - [Considerations](#considerations)
+    - [Structure](#structure)
+    - [Performance \& Efficiency](#performance--efficiency)
+      - [API Limitations](#api-limitations)
+    - [Extensibility](#extensibility)
+  - [Future Improvements](#future-improvements)
 
 ## Installation
 
@@ -159,17 +165,15 @@ New resources can be added using a relatively simple process. Consider the follo
     @GetOne<AbilityGetOne>(r => r.names.map(n => n.name)) // <-- If desired, use the decorator's generic
     names?: string[];                                     //     parameters to specify the incoming API schema
 
-
-
-    ...
+    // ...
   }
 
   export interface AbilityGetOne {    // <-- Define the API schema for the `getOne()` method
-    ...
+    // ...
   }
 
   export interface AbilityGetMany {   // <-- Define the API schema for the `getMany()` method
-    ...
+    // ...
   }
   ```
 
@@ -251,3 +255,66 @@ Source documentation is generated using [TypeDoc](https://typedoc.org/). The gen
   ```
 
 ## Design Notes
+
+### Considerations
+
+In this first iteration, the SDK is primarily focused around two things; providing a clean and intuitive interface for SDK consumers, and providing ease of extensibility for SDK contributors.
+
+This came with a few key considerations:
+
+#### Structure
+
+The SDK is organized according to three main areas of concern:
+
+1. **Internal:** The internal library code used by the SDK itself to interact with the API.
+   - Everything within `./src/lib`
+   - No API-specific logic or references.
+   - Could easily be carved out into its own package.
+
+2. **Shared:** The shared code used by both the internal library and partly exposed through the external SDK interface.
+   - Everything within `./src/resources` and partially `./src/index`
+   - Contains all API-specific logic and references.
+
+3. **External:** The public-facing SDK interface that is interacted with by the consuming application or package.
+   - Everything within `./src/index`
+   - Serves as the point of entry for the SDK.
+
+#### Performance & Efficiency
+
+Due to the experimental nature of the approach, the SDK is not optimized for performance or efficiency and should not be considered as a solution intended for production use.
+
+While some of this is due to limitations imposed by the design of the API, there are still areas where improvements could be made.
+
+##### API Limitations
+
+- No support for server-side query filtering or sorting.
+- No support for partial responses or field selection.
+- No visibility into the rate limits or throttling imposed by the API.
+
+#### Extensibility
+
+The declarative approach to defining resources and API schemas drew inspiraiton from other popular libaries like [TypeORM](https://typeorm.io) and [TypeGraphQL](https://typegraphql.com). For example, in the same way that TypeORM allows developers to define entities and their relationships using decorators, the SDK allows developers to define API resources and uses decorators to define how they are created from API responses.
+
+### Future Improvements
+
+Shoring up the performance and efficiency of the SDK would be a top priority for future iterations, as well as expanding the SDK to support a more comprehensive set of API features:
+
+1. **Caching:** Implementing a caching mechanism to store resources that have already been fetched. This would prevent unnecessary requests and reduce the load on the API.
+
+2. **Redundant Requests:** Optimizing the SDK to reduce the number of request needed for any given operation could be useful.
+   - This could involve the wholesale removal of the `getAll()` method, which is admittedly a fairly egregious offender. In fact this method should generally be considered an anti-pattern for a production SDK.
+   - The `count()` method could be optimized to prefer the cached count obtained from a previous `getMany()` or `count()` invocation.
+
+3. **Unit Tests**: Including traditional unit tests that isolate components and mock dependencies to ensure that each part of the SDK works as expected.
+
+4. **Contract Testing:** Implementing contract testing to ensure that the SDK's API schemas are in sync with the actual API responses. This would help catch any breaking changes to the API early on.
+
+5. **Endpoint Parity:** Expanding the SDK to support all available API endpoints and resources. This would involve some refactoring to support linking the various nested relationships between resources.
+
+6. **Logging & Monitoring:** Adding logging and performance monitoring would improve visibility into API reqests and responses and help developers debug issues more effectively.
+
+7. **Generic API Client:** Separating the library code into its own package would allow the core of the SDK to support any RESTful API, not just the PokéAPI. Once generic, the following improvements could also be made:
+
+   1. **Authentication:** Providing support for common authentication mechanisms suce as HTTP Auth and token-based schemes such as OAuth2, JWT, etc.
+
+   2. **Multiple Protocols:** Extending the SDK to support other protocols such as GraphQL, gRPC, etc.
