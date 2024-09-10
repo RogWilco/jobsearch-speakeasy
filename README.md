@@ -325,13 +325,11 @@ Shoring up the performance and efficiency of the SDK would be a top priority for
 
 3. **Unit Tests**: Including traditional unit tests that isolate components and mock dependencies to ensure that each part of the SDK works as expected.
 
-4. **Contract Testing:** Implementing contract testing to ensure that the SDK's API schemas are in sync with the actual API responses. This would help catch any breaking changes to the API early on.
+4. **Endpoint Parity:** Expanding the SDK to support all available API endpoints and resources. This would involve some refactoring to support linking the various nested relationships between resources.
 
-5. **Endpoint Parity:** Expanding the SDK to support all available API endpoints and resources. This would involve some refactoring to support linking the various nested relationships between resources.
+5. **Logging & Monitoring:** Adding logging and performance monitoring would improve visibility into API reqests and responses and help developers debug issues more effectively.
 
-6. **Logging & Monitoring:** Adding logging and performance monitoring would improve visibility into API reqests and responses and help developers debug issues more effectively.
-
-7. **Generic API Client:** Separating the library code into its own package would allow the core of the SDK to support any RESTful API, not just the PokéAPI. Once generic, the following improvements could also be made:
+6. **Generic API Client:** Separating the library code into its own package would allow the core of the SDK to support any RESTful API, not just the PokéAPI. Once generic, the following improvements could also be made:
 
    1. **Authentication:** Providing support for common authentication mechanisms suce as HTTP Auth and token-based schemes such as OAuth2, JWT, etc.
 
