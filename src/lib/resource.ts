@@ -1,3 +1,4 @@
+import { Transformed } from './resource-transformer'
 import { Constructor, Properties } from './utility-types'
 
 /**
@@ -9,14 +10,20 @@ export type BaseResourceType<T extends BaseResource = BaseResource> =
 /**
  * Represents a resource that can be retrieved from an API.
  */
-export abstract class BaseResource {
+export abstract class BaseResource implements Transformed {
   /**
-   * Initializes a new resource with the specified data.
+   * Creates a new instance using the specified data.
    *
-   * @param data the data with which to initialize the resource
+   * @param this the current subclass definition
+   * @param data the data with which to initialize the entity
+   *
+   * @returns the created entity
    */
-  constructor(data: Partial<BaseResource>) {
-    Object.assign(this, data)
+  static create<T extends BaseResource>(
+    this: Constructor<T>,
+    data: Partial<T>,
+  ): T {
+    return Object.assign(new this(), data)
   }
 
   /**
@@ -37,6 +44,10 @@ export abstract class BaseResource {
  * @returns the class decorator
  */
 export function Resource(resourcePath: string): ClassDecorator {
+  if (!resourcePath) {
+    throw new Error('Resource path must be provided')
+  }
+
   return target => {
     Reflect.defineMetadata('resource:path', resourcePath, target)
   }

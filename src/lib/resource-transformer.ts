@@ -67,7 +67,7 @@ export class ResourceTransformer<From extends Transformable> {
       ResourceType,
     )
 
-    return new ResourceType(
+    return ResourceType.create(
       Object.keys(transformations).reduce((acc, key) => {
         const transformCb = transformations[key]
         return {
