@@ -1,6 +1,7 @@
 # Pokédex Client
 
 [![github-verify-image]][github-verify-url]
+[![Code Coverage][coverage-image]][coverage-url]
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -338,3 +339,5 @@ Shoring up the performance and efficiency of the SDK would be a top priority for
 
 [github-verify-image]: https://github.com/RogWilco/jobsearch-speakeasy/actions/workflows/verify.yaml/badge.svg?name=Build 'Build Status'
 [github-verify-url]: https://github.com/RogWilco/jobsearch-speakeasy/actions/workflows/verify.yaml
+[coverage-image]: https://img.shields.io/codecov/c/github/rogwilco/jobsearch-speakeasy?logo=codecov&logoColor=white
+[coverage-url]: https://codecov.io/gh/rogwilco/jobsearch-speakeasy
