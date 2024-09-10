@@ -1,0 +1,53 @@
+name: Verify
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  quality:
+    name: Quality
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: 'ci'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+      - name: Build
+        run: npx yarn ci:build
+      - name: ESLint
+        run: npx yarn lint .
+      - name: Prettier
+        run: npx yarn prettier . --check
+
+  tests:
+    # if: "!contains(github.event.head_commit.message, 'release:')"
+    name: Tests
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: 'ci'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+      - name: Build
+        run: npx yarn ci:build
+      - name: Test
+        run: npx yarn ci:test
+      - name: Export Coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage-report
+          path: ./out/coverage/lcov.info
+          if-no-files-found: warn
+          overwrite: true
+          retention-days: 1
