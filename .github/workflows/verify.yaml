@@ -44,10 +44,8 @@ jobs:
       - name: Test
         run: npx yarn ci:test
       - name: Export Coverage
-        uses: actions/upload-artifact@v4
+        uses: codecov/codecov-action@v4
         with:
-          name: test-coverage-report
-          path: ./out/coverage/lcov.info
-          if-no-files-found: warn
-          overwrite: true
-          retention-days: 1
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./out/coverage
+          fail_ci_if_error: true
