@@ -36,7 +36,7 @@ export class Pokemon extends NamedResource implements Transformed {
   @GetOne<PokemonGetOne>(r => r.species.name)
   public species?: string
 
-  @GetOne<PokemonGetOne>(r => r.moves.map(m => m.name))
+  @GetOne<PokemonGetOne>(r => r.moves.map(m => m.move.name))
   public moves?: string[]
 }
 
@@ -52,7 +52,14 @@ export interface PokemonGetOne extends Transformable {
   order: number
   species: Nested
   abilities: Nested[]
-  moves: Nested[]
+  moves: {
+    move: Nested
+    version_group_details: {
+      level_learned_at: number
+      move_learn_method: Nested
+      version_group: Nested
+    }[]
+  }[]
   types: Nested[]
   stats: {
     base_stat: number

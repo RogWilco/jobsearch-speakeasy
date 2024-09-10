@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { BaseResource, BaseResourceType } from './resource'
 import { Nested } from './response'
+import { camelToSnake } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Transformable = Record<string, any>
@@ -129,7 +130,9 @@ function _decorate<
       `transform:${context}`,
       {
         ...Reflect.getMetadata(`transform:${context}`, target.constructor),
-        [propertyKey]: transformCb ?? (r => r[propertyKey as keyof typeof r]),
+        [propertyKey]:
+          transformCb ??
+          (r => r[camelToSnake(propertyKey as string) as keyof typeof r]),
       },
       target.constructor,
     )

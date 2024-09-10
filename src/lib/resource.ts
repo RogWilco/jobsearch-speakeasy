@@ -18,6 +18,15 @@ export abstract class BaseResource {
   constructor(data: Partial<BaseResource>) {
     Object.assign(this, data)
   }
+
+  /**
+   * Returns a JSON string representation of the resource.
+   *
+   * @returns the resource as a JSON string
+   */
+  toString(): string {
+    return JSON.stringify(this)
+  }
 }
 
 /**
