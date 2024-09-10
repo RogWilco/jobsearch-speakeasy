@@ -1,12 +1,12 @@
-import { NamedResource } from '../lib/named-resource'
-import { Resource } from '../lib/resource'
 import {
   GetMany,
   GetOne,
+  NamedResource,
+  Nested,
+  Resource,
   Transformable,
   Transformed,
-} from '../lib/resource-transformer'
-import { Nested } from '../lib/response'
+} from '../lib'
 
 /**
  * Represents a Pokemon resource.
