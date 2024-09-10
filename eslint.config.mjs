@@ -23,8 +23,8 @@ export default typescriptEslint.config(
         ecmaVersion: 2021, // TODO: remove if languageOptions.ecmaVersion is enough
         tsconfigRootDir: import.meta.dirname,
         projectService: {
-          allowDefaultProject: ['.*', '*.*', 'test/*.*'],
-          defaultProject: 'tsconfig.eslint.json', // TODO: remove if we can eleminate this file
+          allowDefaultProject: ['.*', '*.mjs'],
+          // defaultProject: 'tsconfig.eslint.json', // TODO: remove if we can eleminate this file
         },
       },
       sourceType: 'module', // TODO: is sourceType needed?
