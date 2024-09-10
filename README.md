@@ -1,5 +1,7 @@
 # Pokédex Client
 
+[![github-verify-image]][github-verify-url]
+
 - [Installation](#installation)
 - [Usage](#usage)
   - [Initializing the Client](#initializing-the-client)
@@ -333,3 +335,6 @@ Shoring up the performance and efficiency of the SDK would be a top priority for
    1. **Authentication:** Providing support for common authentication mechanisms suce as HTTP Auth and token-based schemes such as OAuth2, JWT, etc.
 
    2. **Multiple Protocols:** Extending the SDK to support other protocols such as GraphQL, gRPC, etc.
+
+[github-verify-image]: https://github.com/RogWilco/jobsearch-speakeasy/actions/workflows/verify.yaml/badge.svg?name=Build 'Build Status'
+[github-verify-url]: https://github.com/RogWilco/jobsearch-speakeasy/actions/workflows/verify.yaml
