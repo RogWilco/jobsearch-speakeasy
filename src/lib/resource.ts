@@ -37,6 +37,14 @@ export abstract class BaseResource implements Transformed {
 }
 
 /**
+ * Represents a named resource as defined by the PokeAPI.
+ */
+export abstract class NamedResource extends BaseResource {
+  public id?: number
+  public name?: string
+}
+
+/**
  * Marks a class as a resource accessible at the specified relative path.
  *
  * @param resourcePath the relative path to the resource endpoint

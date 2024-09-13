@@ -1,5 +1,4 @@
 export * from './errors'
-export * from './named-resource'
 export * from './resource'
 export * from './resource-client'
 export * from './resource-transformer'
