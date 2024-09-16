@@ -36,6 +36,9 @@ export abstract class BaseResource implements Transformed {
   }
 }
 
+export type NamedResourceType<T extends NamedResource = NamedResource> =
+  Constructor<T> & Properties<typeof NamedResource>
+
 /**
  * Represents a named resource as defined by the PokeAPI.
  */
