@@ -63,7 +63,7 @@ export class ResourceTransformer<From extends Transformable> {
    */
   public to<To extends Transformed>(ResourceType: BaseResourceType<To>): To {
     const transformations = Reflect.getMetadata(
-      `transform:${this._context}`,
+      `resource:transform:${this._context}`,
       ResourceType,
     )
 
@@ -127,9 +127,12 @@ function _decorate<
 ): PropertyDecorator {
   return (target, propertyKey) => {
     Reflect.defineMetadata(
-      `transform:${context}`,
+      `resource:transform:${context}`,
       {
-        ...Reflect.getMetadata(`transform:${context}`, target.constructor),
+        ...Reflect.getMetadata(
+          `resource:transform:${context}`,
+          target.constructor,
+        ),
         [propertyKey]:
           transformCb ??
           (r => r[camelToSnake(propertyKey as string) as keyof typeof r]),

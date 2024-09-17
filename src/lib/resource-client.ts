@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, CreateAxiosDefaults, isAxiosError } from 'axios'
 import { NetworkError, RequestError, ServerError } from './errors'
-import { NamedResource } from './named-resource'
-import { BaseResourceType } from './resource'
+import { BaseResourceType, NamedResource } from './resource'
 import { ResourceTransformer, Transformable } from './resource-transformer'
 import { Paginated } from './response'
 import { Constructor } from './utility-types'
